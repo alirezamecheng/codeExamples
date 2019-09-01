@@ -1,0 +1,15 @@
+alias myruns='
+for pid in $(pgrep julia);
+do
+     echo -n "$pid : ";
+     readlink -f /proc/${pid}/fd/1;
+done'
+
+
+alias cskm='
+for pid in $(pgrep cskm);
+do
+     echo -n "$pid : ";
+     readlink -f /proc/${pid}/fd/1;
+done'
+alias juliav1='~/JuliaV1.0.1/julia-1.0.2/bin/julia'

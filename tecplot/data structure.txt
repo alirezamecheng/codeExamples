@@ -1,0 +1,5 @@
+TITLE="mydataset"
+VARIABLES="X","Y","Z","u","v","w","pressure"
+ZONE 
+T="myzone", i=85, j=74, k=74
+F = POINT

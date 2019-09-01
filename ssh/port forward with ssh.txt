@@ -1,0 +1,2 @@
+just use -D PORT
+ssh Ali@123.3.3.3 -p 333 -D 8888

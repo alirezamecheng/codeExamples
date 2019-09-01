@@ -1,0 +1,93 @@
+# This is a comment
+[catagory1]
+key1 = "value1"
+key2 = "value2"
+
+[broken.packages]
+name = [
+    "Arduino",
+    "ChainRecursive",
+    "Chunks",
+    "CombinatorialBandits",
+    "ControlCore",
+    "DotOverloading",
+    "DriftDiffusion",
+    "DynamicalBilliardsPlotting",
+    "Expect",
+    "GLUT",
+    "GetC",
+    "HTSLIB",
+    "KeyedTables",
+    "Keys",
+    "LazyCall",
+    "LazyContext",
+    "LazyQuery",
+    "MichiganAutonomousVehicles",
+    "NumberedLines",
+    "OnlineMoments",
+    "OnlinePackage",
+    "OpenGL",
+    "OrthogonalPolynomials",
+    "Parts",
+    "PhasedArrayTracking",
+    "Polyglot",
+    "React",
+    "RecurUnroll",
+    "RequirementVersions",
+    "SDL",
+    "SessionHacker",
+    "SimilarReferences",
+    "Sparrow",
+    "StringArrays",
+    "TypedBools",
+    "ZippedArrays",
+]
+
+[build]
+packages = [
+    [
+        { name = "PredictMDAPI"},
+    ],
+    [
+        { name = "PredictMD"},
+        { name = "PredictMDExtra"},
+        { name = "PredictMDFull"},
+    ],
+    [
+        { name = "PredictMD", branch = "master"},
+        { name = "PredictMDExtra", branch = "master"},
+        { name = "PredictMDFull", branch = "master"},
+    ],
+    # Examples:
+    [
+        { name = "Foo"},
+    ],
+    [
+        { name = "Foo"},
+        { name = "Bar"},
+    ],
+    [
+        { name = "Foo", version = "1.0.0"},
+    ],
+    [
+        { name = "Bar", version = "2.0.0"},
+    ],
+    [
+        { name = "Foo", version = "1.0.0"},
+        { name = "Bar", version = "3.0.0"},
+    ],
+    [
+        { name = "Foo", version = "2.0.0"},
+        { name = "Bar", version = "4.0.0"},
+    ],
+    [
+        { name = "Foo", branch = "master"},
+    ],
+    [
+        { name = "Bar", branch = "master"},
+    ],
+    [
+        { name = "Foo", branch = "master"},
+        { name = "Bar", branch = "master"},
+    ]
+]
