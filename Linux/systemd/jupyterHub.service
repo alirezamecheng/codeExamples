@@ -1,0 +1,14 @@
+# file address is /etc/systemd/system
+[Unit]
+Description=JupyterHub version 1.0.0 service
+After=syslog.target network.target
+
+[Service]
+#User=root
+#Environment="PATH=/usr/local/anaconda3/bin:/usr/local/anaconda3/condabin:/usr/local/anaconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+ExecStart=/srv/jupyterhub_config/jupyterHub_runner.sh
+RemainAfterExit=yes
+#KillMode=control-group
+KillMode=control-group
+[Install]
+WantedBy=multi-user.target
