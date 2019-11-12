@@ -1,0 +1,6 @@
+======================== Command ========= 
+ldconfig -p | grep libjpeg
+==========================================
+If libjpeg is not installed, there will be no output. If it is installed, you will get a line for each version available.
+
+https://serverfault.com/questions/54736/how-to-check-if-a-library-is-installed
