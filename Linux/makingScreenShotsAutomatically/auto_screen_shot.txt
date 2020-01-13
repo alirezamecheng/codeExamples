@@ -1,0 +1,17 @@
+sudo apt-get install scrot --> install scrot
+
+==== 
+while true; do scrot -d int  'filename.jpg|png' -e 'mv $f /file/path/to/store/screenshots'; done
+====
+PARAMETERS:
+Here are a few parameters that you need to change:
+
+int – the number of seconds before each screenshot is taken
+filename – the filename of the screenshot. You can use variables like %Y, %m, %d, %H, %M, %S $w, $h to denote the year, month, day, hour, minute, seconds, width and height respectively.
+jpg|png – take the screenshot in either jpg or png format. Include only one, but not both.
+file/path/to/store/screenshots – the location where you want to move the screenshots to
+
+SIMPLER VERSION
+================
+while true; do scrot & sleep 2; done
+================
