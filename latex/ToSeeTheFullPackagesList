@@ -1,0 +1,58 @@
+https://tex.stackexchange.com/questions/125058/determine-full-list-of-installed-latex-packages-in-ubuntu
+You can find all locations that TeX will search for files using
+
+kpsepath tex
+The format is a bit weird: items are separated by colons, directories that should be searched using a ls-R index file start with !!, directories to be searched recursively end with //. To clean it up, we can process the output a bit:
+
+kpsepath tex | tr ':' '\n' | perl -ne 'm-^(!!)?(/.*?)(//)?$- && print "$2\n"'
+For each of those paths, you can find out which installed packages have put files under those paths using dlocate:
+
+dlocate --package-only /path
+(if you don't have dlocate, install it and make sure to run sudo update-dlocatedb). Putting it all together and eliminating duplicate package names from the output:
+
+=============================== دستور اصلی
+kpsepath tex | tr ':' '\n' | perl -ne 'm-^(!!)?(/.*?)(//)?$- && print "$2\n"' | while read path; do dlocate --package-only $path ; done | sort -u
+===============================
+For example, on my system, that prints:
+
+asymptote
+cm-super-minimal
+context
+dblatex
+feynmf
+gnuplot-x11
+latex-beamer
+latex-cjk-common
+latex-make
+latex-xcolor
+latex2html
+lgrind
+lilypond-data
+lmodern
+pgf
+preview-latex-style
+tex-common
+tex-gyre
+tex4ht-common
+texinfo
+texlive-base
+texlive-bibtex-extra
+texlive-extra-utils
+texlive-font-utils
+texlive-fonts-extra
+texlive-fonts-recommended
+texlive-generic-recommended
+texlive-lang-other
+texlive-latex-base
+texlive-latex-extra
+texlive-latex-recommended
+texlive-luatex
+texlive-math-extra
+texlive-metapost
+texlive-pictures
+texlive-pstricks
+texlive-science
+texlive-xetex
+texpower
+tipa
+There's some stuff there that I wouldn't have expected, like gnuplot-x11, but dpkg -L shows that it includes a gnuplot-lua-tikz.sty. Who knew?!
