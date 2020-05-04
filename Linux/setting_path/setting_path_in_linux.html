@@ -1,0 +1,47 @@
+<div class="post-text" itemprop="text">
+<h3>The simple stuff</h3>
+
+<pre class="lang-bsh prettyprint prettyprinted" style=""><code><span class="pln">PATH</span><span class="pun">=</span><span class="pln">$PATH</span><span class="pun">:~/</span><span class="pln">opt</span><span class="pun">/</span><span class="pln">bin</span></code></pre>
+
+<p>or</p>
+
+<pre class="lang-bsh prettyprint prettyprinted" style=""><code><span class="pln">PATH</span><span class="pun">=~/</span><span class="pln">opt</span><span class="pun">/</span><span class="pln">bin</span><span class="pun">:</span><span class="pln">$PATH</span></code></pre>
+
+<p>depending on whether you want to add <code>~/opt/bin</code> at the end (to be searched after all other directories, in case there is a program by the same name in multiple directories) or at the beginning (to be searched before all other directories).</p>
+
+<p>You can add multiple entries at the same time. <code>PATH=$PATH:~/opt/bin:~/opt/node/bin</code> or variations on the ordering work just fine. Don't put <code>export</code> at the beginning of the line as it has additional complications (see below under “Notes on shells other than bash”).</p>
+
+<p>If your <code>PATH</code> gets built by many different components, you might end up with duplicate entries. See <a href="https://unix.stackexchange.com/questions/25605/how-to-add-home-directory-path-to-be-discovered-by-unix-which-command">How to add home directory path to be discovered by Unix which command?</a> and <a href="https://unix.stackexchange.com/questions/40749/remove-duplicate-path-entries-with-awk-command">Remove duplicate $PATH entries with awk command</a> to avoid adding duplicates or remove them.</p>
+
+<p>Some distributions automatically put <code>~/bin</code> in your PATH if it exists, by the way.</p>
+
+<h3>Where to put it</h3>
+
+<p>Put the line to modify <code>PATH</code> in <code>~/.profile</code>, or in <code>~/.bash_profile</code> if that's what you have.</p>
+
+<p>Note that <code>~/.bash_rc</code> is not read by any program, and <code>~/.bashrc</code> is the configuration file of interactive instances of bash. You should not define environment variables in <code>~/.bashrc</code>. The right place to define environment variables such as <code>PATH</code> is <code>~/.profile</code> (or <code>~/.bash_profile</code> if you don't care about shells other than bash). See <a href="https://superuser.com/questions/183870/difference-between-bashrc-and-bash-profile/183980#183980">What's the difference between them and which one should I use?</a></p>
+
+<p>Don't put it in <code>/etc/environment</code> or <code>~/.pam_environment</code>: these are not shell files, you can't use substitutions like <code>$PATH</code> in there. In these files, you can only override a variable, not add to it.</p>
+
+<h3>Potential complications in some system scripts</h3>
+
+<p>You don't need <code>export</code> if the variable is already in the environment: any change of the value of the variable is reflected in the environment.¹ <code>PATH</code> is pretty much always in the environment; all unix systems set it very early on (usually in the very first process, in fact).</p>
+
+<p>At login time, you can rely on <code>PATH</code> being already in the environment, and already containing some system directories. If you're writing a script that may be executed early while setting up some kind of virtual environment, you may need to ensure that <code>PATH</code> is non-empty and exported: if <code>PATH</code> is still unset, then something like <code>PATH=$PATH:/some/directory</code> would set <code>PATH</code> to <code>:/some/directory</code>, and the empty component at the beginning means the current directory (like <code>.:/some/directory</code>).</p>
+
+<pre class="lang-bsh prettyprint prettyprinted" style=""><code><span class="kwd">if</span><span class="pln"> </span><span class="pun">[</span><span class="pln"> </span><span class="pun">-</span><span class="pln">z </span><span class="str">"${PATH-}"</span><span class="pln"> </span><span class="pun">];</span><span class="pln"> </span><span class="kwd">then</span><span class="pln"> export PATH</span><span class="pun">=/</span><span class="pln">usr</span><span class="pun">/</span><span class="kwd">local</span><span class="pun">/</span><span class="pln">bin</span><span class="pun">:/</span><span class="pln">usr</span><span class="pun">/</span><span class="pln">bin</span><span class="pun">:/</span><span class="pln">bin</span><span class="pun">;</span><span class="pln"> </span><span class="kwd">fi</span></code></pre>
+
+<h3>Notes on shells other than bash</h3>
+
+<p>In bash, ksh and zsh, <code>export</code> is special syntax, and both <code>PATH=~/opt/bin:$PATH</code> and <code>export PATH=~/opt/bin:$PATH</code> do the right thing even. In other Bourne/POSIX-style shells such as dash (which is <code>/bin/sh</code> on many systems), <code>export</code> is parsed as an ordinary command, which implies two differences:</p>
+
+<ul>
+<li><code>~</code> is only parsed at the beginning of a word, except in assignments (see <a href="https://unix.stackexchange.com/questions/25605/how-to-add-home-directory-path-to-be-discovered-by-unix-which-command/25704#25704">How to add home directory path to be discovered by Unix which command?</a> for details);</li>
+<li><code>$PATH</code> outside double quotes <a href="https://unix.stackexchange.com/questions/131766/why-does-my-shell-script-choke-on-whitespace-or-other-special-characters">breaks if <code>PATH</code> contains whitespace or <code>\[*?</code></a>.</li>
+</ul>
+
+<p>So in shells like dash, <strike><code>export PATH=~/opt/bin:$PATH</code></strike> sets <code>PATH</code> to the literal string <code>~/opt/bin/:</code> followed by the value of <code>PATH</code> up to the first space.
+<code>PATH=~/opt/bin:$PATH</code> (a bare assignment) <a href="https://unix.stackexchange.com/questions/68694/when-is-double-quoting-necessary/68748#68748">doesn't require quotes</a> and does the right thing. If you want to use <code>export</code> in a portable script, you need to write <code>export PATH="$HOME/opt/bin:$PATH"</code>, or <code>PATH=~/opt/bin:$PATH; export PATH</code> (or <code>PATH=$HOME/opt/bin:$PATH; export PATH</code> for portability to even the Bourne shell that didn't accept <code>export var=value</code> and didn't do tilde expansion).</p>
+
+<p>¹ <sub> This wasn't true in Bourne shells (as in the actual Bourne shell, not modern POSIX-style shells), but you're highly unlikely to encounter such old shells these days. </sub>  </p>
+    </div>
