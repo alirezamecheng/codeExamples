@@ -3,6 +3,8 @@
 # the script: http://en.wikipedia.org/wiki/Shebang_(Unix)
 # As you already figured, comments start with #. Shebang is also a comment.
 
+# tuturial from: https://learnxinyminutes.com/docs/bash/
+
 # Simple hello world example:
 echo Hello world! # => Hello world!
 
